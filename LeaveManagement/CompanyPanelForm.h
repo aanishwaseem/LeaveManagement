@@ -187,10 +187,12 @@ namespace LeaveManagement {
             // Clear previous content (if any)
             this->tabManageAttendance->Controls->Clear();
 
-            // Load AttendanceForm into Manage Attendance tab
-            AttendanceForm^ attendanceForm = gcnew AttendanceForm();
+            AttendenceForm^ attendanceForm = gcnew AttendenceForm();
+            attendanceForm->TopLevel = false;
             attendanceForm->Dock = DockStyle::Fill;
-            this->tabManageAttendance->Controls->Add(attendanceForm);
+            tabManageAttendance->Controls->Clear();
+            tabManageAttendance->Controls->Add(attendanceForm);
+            attendanceForm->Show();
         }
 
     };
