@@ -1,5 +1,5 @@
 #pragma once
-#include <Windows.h>
+#include "AttendenceForm.h"
 
 namespace LeaveManagement {
 
@@ -72,6 +72,7 @@ namespace LeaveManagement {
             this->tabControl->Dock = System::Windows::Forms::DockStyle::Fill;
             this->tabControl->Location = System::Drawing::Point(0, 0);
             this->tabControl->Name = L"tabControl";
+            this->tabControl->SelectedIndexChanged += gcnew System::EventHandler(this, &CompanyPanelForm::OnTabChanged);
 
             // Home Tab
             this->tabHome->Text = L"Home";
@@ -95,6 +96,7 @@ namespace LeaveManagement {
             this->btnLogout->Size = System::Drawing::Size(75, 23);
             this->btnLogout->Text = L"Logout";
             this->btnLogout->Click += gcnew System::EventHandler(this, &CompanyPanelForm::btnLogout_Click);
+
 
             // Tab Pages
             this->tabReports->Text = L"View Reports";
@@ -130,15 +132,15 @@ namespace LeaveManagement {
         void SetPermissions()
         {
             // Define allowed tabs based on position
-            if (position == "Guard") {
+            /*if (position == "Guard") {
                 allowedTabs = gcnew array<String^> { "Home", "View Reports", "Manage Attendance" };
             }
             else if (position == "Employee") {
                 allowedTabs = gcnew array<String^> { "Home", "View Reports", "Apply for Leaves" };
             }
-            else if (position == "Director") {
+            else if (position == "Director") {*/
                 allowedTabs = allTabs; // Director has access to all tabs
-            }
+           // }
 
             // Remove tabs that are not allowed
             for each (String ^ tabName in allTabs)
@@ -171,5 +173,25 @@ namespace LeaveManagement {
 
             this->Close();
         }
+        void OnTabChanged(System::Object^ sender, System::EventArgs^ e)
+        {
+            if (this->tabControl->SelectedTab == this->tabManageAttendance)
+            {
+                LoadAttendanceTab();
+            }
+        }
+
+        // Load Attendance Form into Manage Attendance Tab
+        void LoadAttendanceTab()
+        {
+            // Clear previous content (if any)
+            this->tabManageAttendance->Controls->Clear();
+
+            // Load AttendanceForm into Manage Attendance tab
+            AttendanceForm^ attendanceForm = gcnew AttendanceForm();
+            attendanceForm->Dock = DockStyle::Fill;
+            this->tabManageAttendance->Controls->Add(attendanceForm);
+        }
+
     };
 }
