@@ -110,6 +110,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies />
+      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -123,6 +124,7 @@
     <ClCompile Include="AttendenceForm.cpp" />
     <ClCompile Include="CompanyPanelForm.cpp" />
     <ClCompile Include="MyForm.cpp" />
+    <ClCompile Include="TimeUserControl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttendenceForm.h">
@@ -132,7 +134,15 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Employee.h" />
+    <ClInclude Include="EmployeeRegister.h" />
+    <ClInclude Include="ITimeObservable.h" />
+    <ClInclude Include="ITimeObserver.h" />
+    <ClInclude Include="Company.h" />
     <ClInclude Include="MyForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="MyTime.h" />
+    <ClInclude Include="TimeUserControl.h">
       <FileType>CppForm</FileType>
     </ClInclude>
   </ItemGroup>

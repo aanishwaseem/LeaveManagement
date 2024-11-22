@@ -1,0 +1,15 @@
+ID: 101
+Name: Alice
+Position: Manager
+Present: Yes
+
+ID: 102
+Name: Bob
+Position: Engineer
+Present: No
+
+ID: 103
+Name: Charlie
+Position: Technician
+Present: No
+

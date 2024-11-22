@@ -1,5 +1,8 @@
 #pragma once
 #include "AttendenceForm.h"
+#include "TimeUserControl.h"
+#include <msclr/marshal_cppstd.h>
+#include <array>
 
 namespace LeaveManagement {
 
@@ -43,6 +46,7 @@ namespace LeaveManagement {
         System::Windows::Forms::TabPage^ tabReports;
         System::Windows::Forms::TabPage^ tabManageAttendance;
         System::Windows::Forms::TabPage^ tabManageLeaves;
+        System::Windows::Forms::TabPage^ tabTime;
         System::Windows::Forms::TabPage^ tabApplyLeaves;
         System::Windows::Forms::Label^ lblEmployeeId;
         System::Windows::Forms::Label^ lblPosition;
@@ -58,6 +62,8 @@ namespace LeaveManagement {
             this->tabManageAttendance = (gcnew System::Windows::Forms::TabPage());
             this->tabManageLeaves = (gcnew System::Windows::Forms::TabPage());
             this->tabApplyLeaves = (gcnew System::Windows::Forms::TabPage());
+            this->tabTime = (gcnew System::Windows::Forms::TabPage());  // Time Tab
+
             this->lblEmployeeId = (gcnew System::Windows::Forms::Label());
             this->lblPosition = (gcnew System::Windows::Forms::Label());
             this->btnLogout = (gcnew System::Windows::Forms::Button());
@@ -69,6 +75,10 @@ namespace LeaveManagement {
             this->tabControl->Controls->Add(this->tabManageAttendance);
             this->tabControl->Controls->Add(this->tabManageLeaves);
             this->tabControl->Controls->Add(this->tabApplyLeaves);
+            this->tabControl->Controls->Add(this->tabTime);
+
+
+            // Add Time Tab to TabControl
             this->tabControl->Dock = System::Windows::Forms::DockStyle::Fill;
             this->tabControl->Location = System::Drawing::Point(0, 0);
             this->tabControl->Name = L"tabControl";
@@ -111,6 +121,8 @@ namespace LeaveManagement {
             this->tabApplyLeaves->Text = L"Apply for Leaves";
             this->tabApplyLeaves->BackColor = System::Drawing::Color::White;
 
+            this->tabTime->Text = L"Time";
+            this->tabTime->BackColor = System::Drawing::Color::White;
             // CompanyPanelForm
             this->ClientSize = System::Drawing::Size(600, 400);
             this->Controls->Add(this->tabControl);
@@ -179,6 +191,10 @@ namespace LeaveManagement {
             {
                 LoadAttendanceTab();
             }
+            else if (this->tabControl->SelectedTab == this->tabTime)
+            {
+                LoadTimeTab();
+            }
         }
 
         // Load Attendance Form into Manage Attendance Tab
@@ -187,13 +203,19 @@ namespace LeaveManagement {
             // Clear previous content (if any)
             this->tabManageAttendance->Controls->Clear();
 
-            AttendenceForm^ attendanceForm = gcnew AttendenceForm();
-            attendanceForm->TopLevel = false;
-            attendanceForm->Dock = DockStyle::Fill;
-            tabManageAttendance->Controls->Clear();
-            tabManageAttendance->Controls->Add(attendanceForm);
-            attendanceForm->Show();
+            AttendanceUserControl^ attendanceControl = gcnew AttendanceUserControl();
+            attendanceControl->Dock = DockStyle::Fill;
+            tabManageAttendance->Controls->Clear(); // Clear any previous controls
+            tabManageAttendance->Controls->Add(attendanceControl);
         }
+        void LoadTimeTab()
+        {
+            // Clear previous content (if any)
+            this->tabTime->Controls->Clear();
 
+            TimeUserControl^ timeControl = gcnew TimeUserControl();
+            timeControl->Dock = DockStyle::Fill;
+            this->tabTime->Controls->Add(timeControl);
+        }
     };
 }

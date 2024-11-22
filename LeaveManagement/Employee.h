@@ -1,38 +1,44 @@
 #pragma once
-#include <string>
-#include <array>
 
-struct AttendenceStatus {
+using namespace System;
+
+public ref class AttendenceStatus
+{
+public:
     bool onDuty;
     bool present;
+
     AttendenceStatus() : onDuty(false), present(false) {}
 };
 
-class Employee {
-    std::string id;
-    std::string name;
-    std::string position;
-    AttendenceStatus status;
+public ref class Employee
+{
+public:
+    String^ id;               // Managed String^ type instead of std::string
+    String^ name;             // Managed String^ type instead of std::string
+    String^ position;         // Managed String^ type instead of std::string
+    AttendenceStatus^ status; // Use ref class for the AttendenceStatus
 
 public:
-    Employee() {}
+    // Default constructor
+    Employee()
+    {
+        status = gcnew AttendenceStatus();
+    }
 
-    Employee(std::string id, std::string name, std::string position)
-        : id(id), name(name), position(position) {}
+    // Constructor with parameters
+    Employee(String^ id, String^ name, String^ position)
+        : id(id), name(name), position(position)
+    {
+        status = gcnew AttendenceStatus();
+    }
 
-    std::string getID() const { return id; }
-    std::string getName() const { return name; }
-    std::string getPosition() const { return position; }
-    AttendenceStatus& getStatus() { return status; }
+    // Getters for properties
+    String^ getID() { return id; }
+    String^ getName() { return name; }
+    String^ getPosition() { return position; }
+    AttendenceStatus^ getStatus() { return status; }
 
-    void setStatus(const AttendenceStatus& newStatus) { status = newStatus; }
+    // Set the status
+    void setStatus(AttendenceStatus^ newStatus) { status = newStatus; }
 };
-
-// Define global employee array
-static std::array<Employee, 5> employees = { {
-    {"101", "Alice", "Manager"},
-    {"102", "Bob", "Engineer"},
-    {"103", "Charlie", "Technician"},
-    {"104", "David", "Clerk"},
-    {"105", "Eve", "HR"}
-} };

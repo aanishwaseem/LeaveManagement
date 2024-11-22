@@ -3,6 +3,9 @@
 #include <string>
 #include <msclr/marshal_cppstd.h>
 #include "CompanyPanelForm.h"
+#include "Company.h"
+#include "MyTime.h"
+
 
 namespace LeaveManagement {
 
@@ -19,6 +22,17 @@ namespace LeaveManagement {
         MyForm(void)
         {
             InitializeComponent();
+            MyTime^ myTime = MyTime::GetInstance();
+            Company^ company = Company::GetInstance();
+
+            // Register the observer
+            myTime->AddObserver(company);
+            EmployeeRegister^ registere = EmployeeRegister::GetInstance();
+
+            // Add some employees to the register
+            registere->AddEmployee(gcnew String("101"), gcnew String("Alice"), gcnew String("Manager"));
+            registere->AddEmployee(gcnew String("102"), gcnew String("Bob"), gcnew String("Engineer"));
+            registere->AddEmployee(gcnew String("103"), gcnew String("Charlie"), gcnew String("Technician"));
         }
 
     protected:

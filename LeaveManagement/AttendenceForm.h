@@ -1,31 +1,36 @@
 #pragma once
-
-#include "Employee.h"
 #include <msclr/marshal_cppstd.h>
+#include "EmployeeRegister.h"
 #include <string>
 #include <array>
+#include <vector>
 
 namespace LeaveManagement {
 
     using namespace System;
-    using namespace System::ComponentModel;
-    using namespace System::Collections;
     using namespace System::Windows::Forms;
     using namespace System::Drawing;
+    using namespace System::IO;
 
-    public ref class AttendenceForm : public System::Windows::Forms::Form {
+    public ref class AttendanceUserControl : public System::Windows::Forms::UserControl
+    {
     private:
         ListView^ listViewEmployees;
         Button^ buttonMarkAttendance;
 
+        // Example employee list
+
     public:
-        AttendenceForm() {
+        AttendanceUserControl()
+        {
             InitializeComponent();
             PopulateEmployeeList();
         }
 
+
     private:
-        void InitializeComponent(void) {
+        void InitializeComponent(void)
+        {
             this->listViewEmployees = (gcnew System::Windows::Forms::ListView());
             this->buttonMarkAttendance = (gcnew System::Windows::Forms::Button());
             this->SuspendLayout();
@@ -46,28 +51,30 @@ namespace LeaveManagement {
             this->buttonMarkAttendance->Location = System::Drawing::Point(160, 230);
             this->buttonMarkAttendance->Size = System::Drawing::Size(120, 30);
             this->buttonMarkAttendance->Text = L"Mark Attendance";
-            this->buttonMarkAttendance->Click += gcnew EventHandler(this, &AttendenceForm::buttonMarkAttendance_Click);
+            this->buttonMarkAttendance->Click += gcnew EventHandler(this, &AttendanceUserControl::buttonMarkAttendance_Click);
 
-            // AttendenceForm
+            // AttendanceUserControl
             this->ClientSize = System::Drawing::Size(430, 280);
             this->Controls->Add(this->listViewEmployees);
             this->Controls->Add(this->buttonMarkAttendance);
-            this->Text = L"Attendance Form";
             this->ResumeLayout(false);
         }
 
-        void PopulateEmployeeList() {
+        void PopulateEmployeeList()
+        {
             listViewEmployees->Items->Clear();
+            EmployeeRegister^ employeeRegister = EmployeeRegister::GetInstance();
+            List<Employee^>^ employees = employeeRegister->GetEmployees();
 
-            for (int i = 0; i < employees.size(); i++) {
-                Employee& emp = employees[i];
-                ListViewItem^ item = gcnew ListViewItem(gcnew String(emp.getID().c_str()));
-                item->SubItems->Add(gcnew String(emp.getName().c_str()));
-                item->SubItems->Add(gcnew String(emp.getPosition().c_str()));
-                item->SubItems->Add(emp.getStatus().onDuty ? "Yes" : "No");
+            for (int i = 0; i < employees->Count; i++) {
+                Employee^ emp = employees[i];
+                ListViewItem^ item = gcnew ListViewItem(emp->getID());
+                item->SubItems->Add(emp->getName());
+                item->SubItems->Add(emp->getPosition());
+                item->SubItems->Add(emp->getStatus()->onDuty ? "Yes" : "No");
 
                 // Set item color based on attendance status
-                if (emp.getStatus().present) {
+                if (emp->getStatus()->present) {
                     item->BackColor = Color::LightGreen;
                 }
                 else {
@@ -78,7 +85,8 @@ namespace LeaveManagement {
             }
         }
 
-        void buttonMarkAttendance_Click(Object^ sender, EventArgs^ e) {
+        void buttonMarkAttendance_Click(Object^ sender, EventArgs^ e)
+        {
             if (listViewEmployees->SelectedItems->Count == 0) {
                 MessageBox::Show("Please select an employee.", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
                 return;
@@ -86,16 +94,18 @@ namespace LeaveManagement {
 
             // Get selected employee
             ListViewItem^ selectedItem = listViewEmployees->SelectedItems[0];
-            std::string selectedID = msclr::interop::marshal_as<std::string>(selectedItem->Text);
+            String^ selectedID = selectedItem->Text;
+            EmployeeRegister^ employeeRegister = EmployeeRegister::GetInstance();
+            List<Employee^>^ employees = employeeRegister->GetEmployees();
 
-            for (int i = 0; i < employees.size(); i++) {
-                Employee& emp = employees[i];
-                if (emp.getID() == selectedID) {
+            for (int i = 0; i < employees->Count; i++) {
+                Employee^ emp = employees[i];
+                if (emp->getID() == selectedID) {
                     // Toggle attendance
-                    emp.getStatus().present = !emp.getStatus().present;
+                    emp->getStatus()->present = !emp->getStatus()->present;
 
                     // Update item color
-                    if (emp.getStatus().present) {
+                    if (emp->getStatus()->present) {
                         selectedItem->BackColor = Color::LightGreen;
                     }
                     else {
@@ -105,5 +115,8 @@ namespace LeaveManagement {
                 }
             }
         }
+
+
+
     };
 }
